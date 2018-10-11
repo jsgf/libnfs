@@ -186,7 +186,7 @@ impl Nfs {
     pub fn getcwd(&self) -> Result<PathBuf> {
         let mut cwd_val_buff: Vec<u8> = Vec::with_capacity(2048);
         unsafe {
-            nfs_getcwd(self.context, cwd_val_buff.as_mut_ptr() as *mut *const i8);
+            nfs_getcwd(self.context, cwd_val_buff.as_mut_ptr() as *mut *const _);
 
             Ok(PathBuf::from(
                 String::from_utf8_lossy(&cwd_val_buff).into_owned(),
@@ -594,7 +594,7 @@ impl<'a> NfsFile<'a> {
                 self.handle,
                 offset,
                 count,
-                buffer.as_mut_ptr() as *mut i8,
+                buffer.as_mut_ptr() as *mut _,
             );
             if read_size < 0 {
                 return Err(Error::new(ErrorKind::Other, self.nfs.get_nfs_error()?));
@@ -611,7 +611,7 @@ impl<'a> NfsFile<'a> {
                 self.handle,
                 offset,
                 count,
-                buffer.as_mut_ptr() as *mut i8,
+                buffer.as_mut_ptr() as *mut _,
             );
             if write_size < 0 {
                 return Err(Error::new(ErrorKind::Other, self.nfs.get_nfs_error()?));
